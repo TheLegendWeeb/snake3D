@@ -308,30 +308,51 @@ void ledseq(int color,int x, int y, int z){
   resetCube();
 }
 
+int snakeSpeed=2000;
+int snakeCor[3];
+int snakeBody[64][3];
+int snakeLen=0;
+int snakeFace[2];//x y z
+
+int food[3];
+int target=0;
+
+
+#define xp 0
+#define xn 1
+#define yp 2
+#define yn 3
+#define zp 4
+#define zn 5
+
+
+
+void randomFood(){
+  food[0]=random(0,3);
+  food[1]=random(0,3);
+  food[2]=random(0,3);
+}
 
 void setup() {
   resetCube();
-  int snakeSpeed=10;
-  int snakeHead[3];
-  int snakeBody[64][3];
-  int snakeLen=1;
-  int snakeFace[2];//x y z
-  int snakeRotation;
+  randomSeed(analogRead(A0));
+  // randomFood();
+
+  food[0]=2;
+  food[1]=0;
+  food[2]=0;
+
+
   snakeFace[0]=0;
-  snakeFace[1]=3;
-
-  #define xp 0
-  #define xn 1
-  #define yp 2
-  #define yn 3
-  #define zp 4
-  #define zn 5
-
-
-  pinMode(placeholderUp,INPUT);
-  pinMode(placeholderDown,INPUT);
-  pinMode(placeholderLeft,INPUT);
-  pinMode(placeholderRight,INPUT);
+  snakeFace[1]=5;
+  snakeCor[0]=0;
+  snakeCor[1]=0;
+  snakeCor[2]=0;
+  // Serial.begin(9600);
+  // pinMode(placeholderUp,INPUT);
+  // pinMode(placeholderDown,INPUT);
+  // pinMode(placeholderLeft,INPUT);
+  // pinMode(placeholderRight,INPUT);
 
 }
 
@@ -344,11 +365,12 @@ void setup() {
 
 //add priority to buttons?
 void loop() {
-  delay(snakeSpeed);
-  bool up;
-  bool down;
-  bool left;
-  bool right;
+  // delay(snakeSpeed);
+  resetCube();
+  bool up=false;
+  bool down=false;
+  bool left=false;
+  bool right=false;
   int direction_cpy=snakeFace[0];
   if(up){
     switch(snakeFace[1]){
@@ -359,7 +381,7 @@ void loop() {
         snakeFace[0]=xp;
         break;
       case yp:
-        sankeFace[0]=yn;
+        snakeFace[0]=yn;
         break;
       case yn:
         snakeFace[0]=yp;
@@ -634,7 +656,68 @@ void loop() {
         break;
     }
   }
+
+  //update snake head
+  // for(int i=;i<snakeLen)
+  if(millis()>target){
+    target=millis()+snakeSpeed;
+    if(snakeLen){
+      for(int i=snakeLen+2;i>1;i--){
+        if(snakeLen==1){
+          snakeBody[1][0]=snakeCor[0];
+          snakeBody[1][1]=snakeCor[1];
+          snakeBody[1][2]=snakeCor[2];
+        }
+        else{
+          snakeBody[snakeLen][0]=snakeBody[snakeLen-1][3];
+          snakeBody[snakeLen][1]=snakeBody[snakeLen-1][3];
+          snakeBody[snakeLen][2]=snakeBody[snakeLen-1][3];
+        }
+      }
+    }
+    switch(snakeFace[0]){
+      case xp:
+        snakeCor[0]++;
+        break;
+      case xn:
+        snakeCor[0]--;
+        break;
+      case yp:
+        snakeCor[1]++;
+        break;
+      case yn:
+        snakeCor[1]--;
+        break;
+      case zp:
+        snakeCor[2]++;
+        break;
+      case zn:
+        snakeCor[2]--;
+        break;
+    }
+  }
+  for(int i=0;i<=snakeLen;i++){
+    if(i==0)
+      ledseq(red ,snakeCor[0],snakeCor[1],snakeCor[2]);
+    else
+      ledseq(blue,snakeBody[i][0],snakeBody[i][1],snakeBody[i][2]);
+  }
+
+
+  if(snakeCor[0]<0 || snakeCor[1]<0 || snakeCor[2]<0 || snakeCor[0]>3 || snakeCor[1]>3 || snakeCor[2]>3)
+    while(1)
+      fillCube(red);
   
-  //det update facing
+  if(snakeCor[0]==food[0] && snakeCor[1]==food[1] && snakeCor[2]==food[2]){
+    snakeLen++;
+    if(snakeLen==1){
+      snakeBody[1][0]=snakeCor[0];
+      snakeBody[1][1]=snakeCor[1];
+      snakeBody[1][2]=snakeCor[2];
+    }
+    food[0]=4;
+    food[1]=4;
+    food[2]=4;
+  }
 
 }
