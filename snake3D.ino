@@ -538,24 +538,103 @@ void loop() {
     switch(snakeFace[1]){
       case xp:
         switch(snakeFace[0]){
-          case 
-          case 
-          case 
-          case 
+          case yp:
+            snakeFace[0]=zp;
+            break;
+          case yn:
+            snakeFace[0]=zn;
+            break;
+          case zp:
+            snakeFace[0]=yn;
+            break;
+          case zn:
+            snakeFace[0]=yp;
+            break;
         }
         break;
       case xn:
+        switch(snakeFace[0]){
+          case yp:
+            snakeFace[0]=zn;
+            break;
+          case yn:
+            snakeFace[0]=zp;
+            break;
+          case zp:
+            snakeFace[0]=yp;
+            break;
+          case zn:
+            snakeFace[0]=yn;
+            break;
+        }
         break;
       case yp:
+        switch(snakeFace[0]){
+          case xp:
+            snakeFace[0]=zn;
+            break;
+          case xn:
+            snakeFace[0]=zp;
+            break;
+          case zp:
+            snakeFace[0]=xp;
+            break;
+          case zn:
+            snakeFace[0]=xn;
+            break;
+        }
         break;
       case yn:
+        switch(snakeFace[0]){
+          case xp:
+            snakeFace[0]=zp;
+            break;
+          case xn:
+            snakeFace[0]=zn;
+            break;
+          case zp:
+            snakeFace[0]=xn;
+            break;
+          case zn:
+            snakeFace[0]=xp;
+            break;
+        }
         break;
       case zp:
+        switch(snakeFace[0]){
+          case yp:
+            snakeFace[0]=xn;
+            break;
+          case yn:
+            snakeFace[0]=xp;
+            break;
+          case xp:
+            snakeFace[0]=yp;
+            break;
+          case xn:
+            snakeFace[0]=yn;
+            break;
+        }
         break;
       case zn:
+        switch(snakeFace[0]){
+          case yp:
+            snakeFace[0]=xp;
+            break;
+          case yn:
+            snakeFace[0]=xn;
+            break;
+          case xp:
+            snakeFace[0]=yn;
+            break;
+          case xn:
+            snakeFace[0]=yp;
+            break;
+        }
         break;
     }
   }
+  
   //det update facing
 
 }
