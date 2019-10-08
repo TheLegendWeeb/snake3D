@@ -312,10 +312,13 @@ void ledseq(int color,int x, int y, int z){
 void setup() {
   resetCube();
   int snakeSpeed=10;
-  int snakeHead[4][4][4];
-  int snakeBody[64][4][4][4];
+  int snakeHead[3];
+  int snakeBody[64][3];
   int snakeLen=1;
-  int snakeFace;
+  int snakeFace[2];//x y z
+  int snakeRotation;
+  snakeFace[0]=0;
+  snakeFace[1]=3;
 
   #define xp 0
   #define xn 1
@@ -332,6 +335,13 @@ void setup() {
 
 }
 
+// #define x 0
+// #define y 1
+// #define z 2
+// #define fx 3
+// #define fy 4
+// #define fz 5
+
 //add priority to buttons?
 void loop() {
   delay(snakeSpeed);
@@ -339,6 +349,213 @@ void loop() {
   bool down;
   bool left;
   bool right;
+  int direction_cpy=snakeFace[0];
+  if(up){
+    switch(snakeFace[1]){
+      case xp:
+        snakeFace[0]=xn;
+        break;
+      case xn:
+        snakeFace[0]=xp;
+        break;
+      case yp:
+        sankeFace[0]=yn;
+        break;
+      case yn:
+        snakeFace[0]=yp;
+        break;
+      case zp:
+        snakeFace[0]=zn;
+        break;
+      case zn:
+        snakeFace[0]=zp;
+        break;
+    }
+    switch(direction_cpy){
+      case xp:
+        snakeFace[1]=xp;
+        break;
+      case xn:
+        snakeFace[1]=xn;
+        break;
+      case yp:
+        snakeFace[1]=yp;
+        break;
+      case yn:
+        snakeFace[1]=yn;
+        break;
+      case zp:
+        snakeFace[1]=zp;
+        break;
+      case zn:
+        snakeFace[1]=zn;
+        break;
+    }
+  }
+  else if(down){
+    switch(snakeFace[1]){
+      case xp:
+        snakeFace[0]=xp;
+        break;
+      case xn:
+        snakeFace[0]=xn;
+        break;
+      case yp:
+        snakeFace[0]=yp;
+        break;
+      case yn:
+        snakeFace[0]=yn;
+        break;
+      case zp:
+        snakeFace[0]=zp;
+        break;
+      case zn:
+        snakeFace[0]=zn;
+        break;
+    }
+    switch(direction_cpy){
+      case xp:
+        snakeFace[1]=xn;
+        break;
+      case xn:
+        snakeFace[1]=xp;
+        break;
+      case yp:
+        snakeFace[1]=yn;
+        break;
+      case yn:
+        snakeFace[1]=yp;
+        break;
+      case zp:
+        snakeFace[1]=zn;
+        break;
+      case zn:
+        snakeFace[1]=zp;
+        break;
+    }
+  }
+  else if(left){
+    switch(snakeFace[1]){
+      case xp:
+        switch(snakeFace[0]){
+          case yp:
+            snakeFace[0]=zn;
+            break;
+          case yn:
+            snakeFace[0]=zp;
+            break;
+          case zp:
+            snakeFace[0]=yp;
+            break;
+          case zn:
+            snakeFace[0]=yn;
+            break;
+        }
+        break;
+      case xn:
+        switch(snakeFace[0]){
+          case yp:
+            snakeFace[0]=zp;
+            break;
+          case yn:
+            snakeFace[0]=zn;
+            break;
+          case zp:
+            snakeFace[0]=yn;
+            break;
+          case zn:
+            snakeFace[0]=yp;
+            break;
+        }
+        break;
+      case yp:
+      switch(snakeFace[0]){
+          case xp:
+            snakeFace[0]=zp;
+            break;
+          case xn:
+            snakeFace[0]=zn;
+            break;
+          case zp:
+            snakeFace[0]=xn;
+            break;
+          case zn:
+            snakeFace[0]=xp;
+            break;
+        }
+        break;
+      case yn:
+        switch(snakeFace[0]){
+          case xp:
+            snakeFace[0]=zn;
+            break;
+          case xn:
+            snakeFace[0]=zp;
+            break;
+          case zp:
+            snakeFace[0]=xp;
+            break;
+          case zn:
+            snakeFace[0]=xn;
+            break;
+        }
+        break;
+      case zp:
+        switch(snakeFace[0]){
+          case yp:
+            snakeFace[0]=xp;
+            break;
+          case yn:
+            snakeFace[0]=xn;
+            break;
+          case xp:
+            snakeFace[0]=yn;
+            break;
+          case xn:
+            snakeFace[0]=yp;
+            break;
+        }
+        break;
+      case zn:
+        switch(snakeFace[0]){
+          case yp:
+            snakeFace[0]=xn;
+            break;
+          case yn:
+            snakeFace[0]=xp;
+            break;
+          case xp:
+            snakeFace[0]=yp;
+            break;
+          case xn:
+            snakeFace[0]=yn;
+            break;
+        }
+        break;
+    }
+  }
+  else if(right){
+    switch(snakeFace[1]){
+      case xp:
+        switch(snakeFace[0]){
+          case 
+          case 
+          case 
+          case 
+        }
+        break;
+      case xn:
+        break;
+      case yp:
+        break;
+      case yn:
+        break;
+      case zp:
+        break;
+      case zn:
+        break;
+    }
+  }
   //det update facing
 
 }
