@@ -317,6 +317,11 @@ int snakeFace[2];//x y z
 int food[3];
 int target=0;
 
+bool up;
+bool down;
+bool left;
+bool right;
+
 
 #define xp 0
 #define xn 1
@@ -335,7 +340,7 @@ void randomFood(){
 
 void setup() {
   resetCube();
-  randomSeed(analogRead(A0));
+  randomSeed(analogRead(A10));
   // randomFood();
 
   food[0]=2;
@@ -349,10 +354,10 @@ void setup() {
   snakeCor[1]=0;
   snakeCor[2]=0;
   // Serial.begin(9600);
-  // pinMode(placeholderUp,INPUT);
-  // pinMode(placeholderDown,INPUT);
-  // pinMode(placeholderLeft,INPUT);
-  // pinMode(placeholderRight,INPUT);
+  pinMode(A0,INPUT);
+  pinMode(A1,INPUT);
+  pinMode(A2,INPUT);
+  pinMode(A3,INPUT);
 
 }
 
@@ -362,301 +367,313 @@ void setup() {
 // #define fx 3
 // #define fy 4
 // #define fz 5
-
+int target2;
 //add priority to buttons?
 void loop() {
   // delay(snakeSpeed);
   resetCube();
-  bool up=false;
-  bool down=false;
-  bool left=false;
-  bool right=false;
-  int direction_cpy=snakeFace[0];
-  if(up){
-    switch(snakeFace[1]){
-      case xp:
-        snakeFace[0]=xn;
-        break;
-      case xn:
-        snakeFace[0]=xp;
-        break;
-      case yp:
-        snakeFace[0]=yn;
-        break;
-      case yn:
-        snakeFace[0]=yp;
-        break;
-      case zp:
-        snakeFace[0]=zn;
-        break;
-      case zn:
-        snakeFace[0]=zp;
-        break;
+  bool flag=true;
+  if(flag){
+    up=false;
+    down=false;
+    left=!digitalRead(A0);
+    right=!digitalRead(A1);
+    flag=false;
+    int target2=millis()+1000;
+  
+    int direction_cpy=snakeFace[0];
+    if(up){
+      switch(snakeFace[1]){
+        case xp:
+          snakeFace[0]=xn;
+          break;
+        case xn:
+          snakeFace[0]=xp;
+          break;
+        case yp:
+          snakeFace[0]=yn;
+          break;
+        case yn:
+          snakeFace[0]=yp;
+          break;
+        case zp:
+          snakeFace[0]=zn;
+          break;
+        case zn:
+          snakeFace[0]=zp;
+          break;
+      }
+      switch(direction_cpy){
+        case xp:
+          snakeFace[1]=xp;
+          break;
+        case xn:
+          snakeFace[1]=xn;
+          break;
+        case yp:
+          snakeFace[1]=yp;
+          break;
+        case yn:
+          snakeFace[1]=yn;
+          break;
+        case zp:
+          snakeFace[1]=zp;
+          break;
+        case zn:
+          snakeFace[1]=zn;
+          break;
+      }
     }
-    switch(direction_cpy){
-      case xp:
-        snakeFace[1]=xp;
-        break;
-      case xn:
-        snakeFace[1]=xn;
-        break;
-      case yp:
-        snakeFace[1]=yp;
-        break;
-      case yn:
-        snakeFace[1]=yn;
-        break;
-      case zp:
-        snakeFace[1]=zp;
-        break;
-      case zn:
-        snakeFace[1]=zn;
-        break;
+    else if(down){
+      switch(snakeFace[1]){
+        case xp:
+          snakeFace[0]=xp;
+          break;
+        case xn:
+          snakeFace[0]=xn;
+          break;
+        case yp:
+          snakeFace[0]=yp;
+          break;
+        case yn:
+          snakeFace[0]=yn;
+          break;
+        case zp:
+          snakeFace[0]=zp;
+          break;
+        case zn:
+          snakeFace[0]=zn;
+          break;
+      }
+      switch(direction_cpy){
+        case xp:
+          snakeFace[1]=xn;
+          break;
+        case xn:
+          snakeFace[1]=xp;
+          break;
+        case yp:
+          snakeFace[1]=yn;
+          break;
+        case yn:
+          snakeFace[1]=yp;
+          break;
+        case zp:
+          snakeFace[1]=zn;
+          break;
+        case zn:
+          snakeFace[1]=zp;
+          break;
+      }
     }
+    else if(left){
+      switch(snakeFace[1]){
+        case xp:
+          switch(snakeFace[0]){
+            case yp:
+              snakeFace[0]=zn;
+              break;
+            case yn:
+              snakeFace[0]=zp;
+              break;
+            case zp:
+              snakeFace[0]=yp;
+              break;
+            case zn:
+              snakeFace[0]=yn;
+              break;
+          }
+          break;
+        case xn:
+          switch(snakeFace[0]){
+            case yp:
+              snakeFace[0]=zp;
+              break;
+            case yn:
+              snakeFace[0]=zn;
+              break;
+            case zp:
+              snakeFace[0]=yn;
+              break;
+            case zn:
+              snakeFace[0]=yp;
+              break;
+          }
+          break;
+        case yp:
+        switch(snakeFace[0]){
+            case xp:
+              snakeFace[0]=zp;
+              break;
+            case xn:
+              snakeFace[0]=zn;
+              break;
+            case zp:
+              snakeFace[0]=xn;
+              break;
+            case zn:
+              snakeFace[0]=xp;
+              break;
+          }
+          break;
+        case yn:
+          switch(snakeFace[0]){
+            case xp:
+              snakeFace[0]=zn;
+              break;
+            case xn:
+              snakeFace[0]=zp;
+              break;
+            case zp:
+              snakeFace[0]=xp;
+              break;
+            case zn:
+              snakeFace[0]=xn;
+              break;
+          }
+          break;
+        case zp:
+          switch(snakeFace[0]){
+            case yp:
+              snakeFace[0]=xp;
+              break;
+            case yn:
+              snakeFace[0]=xn;
+              break;
+            case xp:
+              snakeFace[0]=yn;
+              break;
+            case xn:
+              snakeFace[0]=yp;
+              break;
+          }
+          break;
+        case zn:
+          switch(snakeFace[0]){
+            case yp:
+              snakeFace[0]=xn;
+              break;
+            case yn:
+              snakeFace[0]=xp;
+              break;
+            case xp:
+              snakeFace[0]=yp;
+              break;
+            case xn:
+              snakeFace[0]=yn;
+              break;
+          }
+          break;
+      }
+    }
+    else if(right){
+      switch(snakeFace[1]){
+        case xp:
+          switch(snakeFace[0]){
+            case yp:
+              snakeFace[0]=zp;
+              break;
+            case yn:
+              snakeFace[0]=zn;
+              break;
+            case zp:
+              snakeFace[0]=yn;
+              break;
+            case zn:
+              snakeFace[0]=yp;
+              break;
+          }
+          break;
+        case xn:
+          switch(snakeFace[0]){
+            case yp:
+              snakeFace[0]=zn;
+              break;
+            case yn:
+              snakeFace[0]=zp;
+              break;
+            case zp:
+              snakeFace[0]=yp;
+              break;
+            case zn:
+              snakeFace[0]=yn;
+              break;
+          }
+          break;
+        case yp:
+          switch(snakeFace[0]){
+            case xp:
+              snakeFace[0]=zn;
+              break;
+            case xn:
+              snakeFace[0]=zp;
+              break;
+            case zp:
+              snakeFace[0]=xp;
+              break;
+            case zn:
+              snakeFace[0]=xn;
+              break;
+          }
+          break;
+        case yn:
+          switch(snakeFace[0]){
+            case xp:
+              snakeFace[0]=zp;
+              break;
+            case xn:
+              snakeFace[0]=zn;
+              break;
+            case zp:
+              snakeFace[0]=xn;
+              break;
+            case zn:
+              snakeFace[0]=xp;
+              break;
+          }
+          break;
+        case zp:
+          switch(snakeFace[0]){
+            case yp:
+              snakeFace[0]=xn;
+              break;
+            case yn:
+              snakeFace[0]=xp;
+              break;
+            case xp:
+              snakeFace[0]=yp;
+              break;
+            case xn:
+              snakeFace[0]=yn;
+              break;
+          }
+          break;
+        case zn:
+          switch(snakeFace[0]){
+            case yp:
+              snakeFace[0]=xp;
+              break;
+            case yn:
+              snakeFace[0]=xn;
+              break;
+            case xp:
+              snakeFace[0]=yn;
+              break;
+            case xn:
+              snakeFace[0]=yp;
+              break;
+          }
+          break;
+      }
+    }
+    up=false;
+    down=false;
+    left=false;
+    right=false;
   }
-  else if(down){
-    switch(snakeFace[1]){
-      case xp:
-        snakeFace[0]=xp;
-        break;
-      case xn:
-        snakeFace[0]=xn;
-        break;
-      case yp:
-        snakeFace[0]=yp;
-        break;
-      case yn:
-        snakeFace[0]=yn;
-        break;
-      case zp:
-        snakeFace[0]=zp;
-        break;
-      case zn:
-        snakeFace[0]=zn;
-        break;
-    }
-    switch(direction_cpy){
-      case xp:
-        snakeFace[1]=xn;
-        break;
-      case xn:
-        snakeFace[1]=xp;
-        break;
-      case yp:
-        snakeFace[1]=yn;
-        break;
-      case yn:
-        snakeFace[1]=yp;
-        break;
-      case zp:
-        snakeFace[1]=zn;
-        break;
-      case zn:
-        snakeFace[1]=zp;
-        break;
-    }
+  if(millis()>target2){
+    flag=true;
   }
-  else if(left){
-    switch(snakeFace[1]){
-      case xp:
-        switch(snakeFace[0]){
-          case yp:
-            snakeFace[0]=zn;
-            break;
-          case yn:
-            snakeFace[0]=zp;
-            break;
-          case zp:
-            snakeFace[0]=yp;
-            break;
-          case zn:
-            snakeFace[0]=yn;
-            break;
-        }
-        break;
-      case xn:
-        switch(snakeFace[0]){
-          case yp:
-            snakeFace[0]=zp;
-            break;
-          case yn:
-            snakeFace[0]=zn;
-            break;
-          case zp:
-            snakeFace[0]=yn;
-            break;
-          case zn:
-            snakeFace[0]=yp;
-            break;
-        }
-        break;
-      case yp:
-      switch(snakeFace[0]){
-          case xp:
-            snakeFace[0]=zp;
-            break;
-          case xn:
-            snakeFace[0]=zn;
-            break;
-          case zp:
-            snakeFace[0]=xn;
-            break;
-          case zn:
-            snakeFace[0]=xp;
-            break;
-        }
-        break;
-      case yn:
-        switch(snakeFace[0]){
-          case xp:
-            snakeFace[0]=zn;
-            break;
-          case xn:
-            snakeFace[0]=zp;
-            break;
-          case zp:
-            snakeFace[0]=xp;
-            break;
-          case zn:
-            snakeFace[0]=xn;
-            break;
-        }
-        break;
-      case zp:
-        switch(snakeFace[0]){
-          case yp:
-            snakeFace[0]=xp;
-            break;
-          case yn:
-            snakeFace[0]=xn;
-            break;
-          case xp:
-            snakeFace[0]=yn;
-            break;
-          case xn:
-            snakeFace[0]=yp;
-            break;
-        }
-        break;
-      case zn:
-        switch(snakeFace[0]){
-          case yp:
-            snakeFace[0]=xn;
-            break;
-          case yn:
-            snakeFace[0]=xp;
-            break;
-          case xp:
-            snakeFace[0]=yp;
-            break;
-          case xn:
-            snakeFace[0]=yn;
-            break;
-        }
-        break;
-    }
-  }
-  else if(right){
-    switch(snakeFace[1]){
-      case xp:
-        switch(snakeFace[0]){
-          case yp:
-            snakeFace[0]=zp;
-            break;
-          case yn:
-            snakeFace[0]=zn;
-            break;
-          case zp:
-            snakeFace[0]=yn;
-            break;
-          case zn:
-            snakeFace[0]=yp;
-            break;
-        }
-        break;
-      case xn:
-        switch(snakeFace[0]){
-          case yp:
-            snakeFace[0]=zn;
-            break;
-          case yn:
-            snakeFace[0]=zp;
-            break;
-          case zp:
-            snakeFace[0]=yp;
-            break;
-          case zn:
-            snakeFace[0]=yn;
-            break;
-        }
-        break;
-      case yp:
-        switch(snakeFace[0]){
-          case xp:
-            snakeFace[0]=zn;
-            break;
-          case xn:
-            snakeFace[0]=zp;
-            break;
-          case zp:
-            snakeFace[0]=xp;
-            break;
-          case zn:
-            snakeFace[0]=xn;
-            break;
-        }
-        break;
-      case yn:
-        switch(snakeFace[0]){
-          case xp:
-            snakeFace[0]=zp;
-            break;
-          case xn:
-            snakeFace[0]=zn;
-            break;
-          case zp:
-            snakeFace[0]=xn;
-            break;
-          case zn:
-            snakeFace[0]=xp;
-            break;
-        }
-        break;
-      case zp:
-        switch(snakeFace[0]){
-          case yp:
-            snakeFace[0]=xn;
-            break;
-          case yn:
-            snakeFace[0]=xp;
-            break;
-          case xp:
-            snakeFace[0]=yp;
-            break;
-          case xn:
-            snakeFace[0]=yn;
-            break;
-        }
-        break;
-      case zn:
-        switch(snakeFace[0]){
-          case yp:
-            snakeFace[0]=xp;
-            break;
-          case yn:
-            snakeFace[0]=xn;
-            break;
-          case xp:
-            snakeFace[0]=yn;
-            break;
-          case xn:
-            snakeFace[0]=yp;
-            break;
-        }
-        break;
-    }
-  }
-
   //update snake head
   // for(int i=;i<snakeLen)
   if(millis()>target){
@@ -705,8 +722,9 @@ void loop() {
 
 
   if(snakeCor[0]<0 || snakeCor[1]<0 || snakeCor[2]<0 || snakeCor[0]>3 || snakeCor[1]>3 || snakeCor[2]>3)
-    while(1)
+    while(1){
       fillCube(red);
+    }
   
   if(snakeCor[0]==food[0] && snakeCor[1]==food[1] && snakeCor[2]==food[2]){
     snakeLen++;
