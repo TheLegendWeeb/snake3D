@@ -306,7 +306,7 @@ void ledseq(int color,int x, int y, int z){
   resetCube();
 }
 
-int snakeSpeed=1000;
+int snakeSpeed=2000;
 int snakeCor[3];
 int snakeBody[64][3];
 int snakeLen=0;
@@ -314,6 +314,7 @@ int snakeFace[2];//x y z
 
 int food[3];
 unsigned long target=0;
+
 
 bool up;
 bool down;
@@ -333,11 +334,11 @@ bool right;
 void randomFood(){
   food[0]=random(0,3);
   food[1]=random(0,3);
-  food[2]=0;
+  food[2]=random(0,3);
   if(snakeCor[0]==food[0] && snakeCor[1]==food[1] && snakeCor[2]==food[2]){
     food[0]=random(0,3);
     food[1]=random(0,3);
-    food[2]=0;
+    food[2]=random(0,3);
   }
   for(int i=1;i<=snakeLen;i++){
     if(snakeBody[i][0]==food[0] && snakeBody[i][1]==food[1] && snakeBody[i][2]==food[2]){
@@ -363,7 +364,6 @@ void setup() {
   snakeCor[0]=0;
   snakeCor[1]=0;
   snakeCor[2]=0;
-  Serial.begin(9600);
   pinMode(A0,INPUT);
   digitalWrite(A0,HIGH);
   pinMode(A1,INPUT);
@@ -384,12 +384,16 @@ void setup() {
 bool flag=true;
 //add priority to buttons?
 void loop() {
+
+  if(snakeLen>=63){
+    fillCube(blue);
+  }
   // delay(snakeSpeed);
   resetCube();
   // bool flag=true;
   if(flag){
-    up=false;
-    down=false;
+    up=digitalRead(A2);
+    down=digitalRead(A3);
     left=digitalRead(A0);
     right=digitalRead(A1);
     if(up || down || left || right)
