@@ -11,11 +11,9 @@
 void resetCube(){
   for(int i=2;i<=13;i++){
     pinMode(i,INPUT);
-    //Serial.println(i);
   }
   for(int i=22;i<=25;i++){
     pinMode(i,INPUT);
-    //Serial.println(i);
   }
   for(int i=2;i<13;i++){
     digitalWrite(i,LOW);
@@ -308,7 +306,7 @@ void ledseq(int color,int x, int y, int z){
   resetCube();
 }
 
-int snakeSpeed=2000;
+int snakeSpeed=1000;
 int snakeCor[3];
 int snakeBody[64][3];
 int snakeLen=0;
@@ -336,6 +334,17 @@ void randomFood(){
   food[0]=random(0,3);
   food[1]=random(0,3);
   food[2]=0;
+  if(snakeCor[0]==food[0] && snakeCor[1]==food[1] && snakeCor[2]==food[2]){
+    food[0]=random(0,3);
+    food[1]=random(0,3);
+    food[2]=0;
+  }
+  for(int i=1;i<=snakeLen;i++){
+    if(snakeBody[i][0]==food[0] && snakeBody[i][1]==food[1] && snakeBody[i][2]==food[2]){
+      randomFood();
+      break;
+    }
+  }
   // food[2]=random(0,3);
 }
 
@@ -677,10 +686,7 @@ void loop() {
     right=false;
   }
 
-  // Serial.println(snakeFace[0]);
-  //update snake head
   // for(int i=;i<snakeLen)
-  ///MAJOR INT OVERFLOW ON TARGET
   if(millis()>target){
     flag=true;
     target=millis()+snakeSpeed;
@@ -731,8 +737,14 @@ void loop() {
   if(snakeCor[0]<0 || snakeCor[1]<0 || snakeCor[2]<0 || snakeCor[0]>3 || snakeCor[1]>3 || snakeCor[2]>3)
     while(1){
       fillCube(red);
-      // Serial.println("fuck");
     }
+  if(snakeLen>=4){
+    for(int i=4;i<=snakeLen;i++)
+      if(snakeCor[0]==snakeBody[i][0] && snakeCor[1]==snakeBody[i][1] && snakeCor[2]==snakeBody[i][2])
+        while(1){
+          fillCube(green);
+        }
+  }
   
   if(snakeCor[0]==food[0] && snakeCor[1]==food[1] && snakeCor[2]==food[2]){
     snakeLen++;
@@ -740,6 +752,11 @@ void loop() {
       snakeBody[1][0]=snakeCor[0];
       snakeBody[1][1]=snakeCor[1];
       snakeBody[1][2]=snakeCor[2];
+    }
+    else if(snakeLen>1){
+      snakeBody[snakeLen][0]=snakeBody[snakeLen-1][0];
+      snakeBody[snakeLen][1]=snakeBody[snakeLen-1][1];
+      snakeBody[snakeLen][2]=snakeBody[snakeLen-1][2];
     }
     randomFood();
   }
