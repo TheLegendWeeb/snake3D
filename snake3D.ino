@@ -306,7 +306,7 @@ void ledseq(int color,int x, int y, int z){
   resetCube();
 }
 
-int snakeSpeed=2000;
+int snakeSpeed=1500;
 int snakeCor[3];
 int snakeBody[64][3];
 int snakeLen=0;
@@ -349,10 +349,20 @@ void randomFood(){
   // food[2]=random(0,3);
 }
 
+int failScr(){
+  unsigned long endTim=millis()+2000;
+  while(millis()<endTim)
+    fillCube(red);
+  pinMode(52,OUTPUT);
+}
+
 void setup() {
   resetCube();
   randomSeed(analogRead(A10));
   // randomFood();
+
+  pinMode(52,INPUT);
+  digitalWrite(52,LOW);
 
   food[0]=2;
   food[1]=0;
@@ -382,9 +392,28 @@ void setup() {
 // #define fy 4
 // #define fz 5
 bool flag=true;
+bool start=false;
 //add priority to buttons?
 void loop() {
+  while(start==false){
+    //start screen
 
+    int rot_col=0;
+    for(int i=0;i<4;i++)
+      for(int j=0;j<4;j++)
+        for(int k=0;k<4;k++){
+          drawLed(rot_col,i,k,j);
+          rot_col=random(0,7);
+
+          if(digitalRead(A0) || digitalRead(A1) || digitalRead(A2) || digitalRead(A3)){
+            start=true;
+            delay(400);
+          }
+
+          delay(30);
+          resetCube();
+        }
+  }
   if(snakeLen>=63){
     fillCube(blue);
   }
@@ -739,19 +768,16 @@ void loop() {
 
 
   if(snakeCor[0]<0 || snakeCor[1]<0 || snakeCor[2]<0 || snakeCor[0]>3 || snakeCor[1]>3 || snakeCor[2]>3)
-    while(1){
-      fillCube(red);
-    }
+    failScr();
   if(snakeLen>=4){
     for(int i=4;i<=snakeLen;i++)
       if(snakeCor[0]==snakeBody[i][0] && snakeCor[1]==snakeBody[i][1] && snakeCor[2]==snakeBody[i][2])
-        while(1){
-          fillCube(green);
-        }
+        failScr();
   }
   
   if(snakeCor[0]==food[0] && snakeCor[1]==food[1] && snakeCor[2]==food[2]){
     snakeLen++;
+    snakeSpeed-=100;
     if(snakeLen==1){
       snakeBody[1][0]=snakeCor[0];
       snakeBody[1][1]=snakeCor[1];
