@@ -268,6 +268,7 @@ void drawLed(int color, int x, int y, int z){
   else if(color == 3 or color == 4 or color == 5){
     if(color == 3){
       drawLedPrim(red, x , y , z);
+      //wtf, there is supposed to be a delay here
       drawLedPrim(green, x , y , z);
     }
     else if(color == 4){
@@ -399,8 +400,8 @@ void loop() {
     //start screen
 
     int rot_col=0;
-    for(int i=0;i<4;i++)
-      for(int j=0;j<4;j++)
+    for(int i=0;i<4;i++){
+      for(int j=0;j<4;j++){
         for(int k=0;k<4;k++){
           drawLed(rot_col,i,k,j);
           rot_col=random(0,7);
@@ -408,11 +409,18 @@ void loop() {
           if(digitalRead(A0) || digitalRead(A1) || digitalRead(A2) || digitalRead(A3)){
             start=true;
             delay(400);
+            break;
           }
 
           delay(30);
           resetCube();
         }
+        if(start)
+          break;
+      }
+      if(start)
+        break;
+    }
   }
   if(snakeLen>=63){
     fillCube(blue);
@@ -761,8 +769,14 @@ void loop() {
   for(int i=0;i<=snakeLen;i++){
     if(i==0)
       ledseq(red ,snakeCor[0],snakeCor[1],snakeCor[2]);
-    else
-      ledseq(blue,snakeBody[i][0],snakeBody[i][1],snakeBody[i][2]);
+    else{
+      if(i%2==0)
+        ledseq(blue,snakeBody[i][0],snakeBody[i][1],snakeBody[i][2]);
+      else{
+        ledseq(blue,snakeBody[i][0],snakeBody[i][1],snakeBody[i][2]);
+        ledseq(green,snakeBody[i][0],snakeBody[i][1],snakeBody[i][2]);
+      }
+    }
   }
   ledseq(green,food[0],food[1],food[2]);
 
@@ -777,7 +791,10 @@ void loop() {
   
   if(snakeCor[0]==food[0] && snakeCor[1]==food[1] && snakeCor[2]==food[2]){
     snakeLen++;
-    snakeSpeed-=100;
+    if(snakeSpeed>800)
+      snakeSpeed-=100;
+    else if(snakeSpeed>700)
+      snakeSpeed-=25;
     if(snakeLen==1){
       snakeBody[1][0]=snakeCor[0];
       snakeBody[1][1]=snakeCor[1];
