@@ -315,7 +315,7 @@ int snakeLen=0;
 int snakeFace[2];//x y z
 
 int food[3];
-int target=0;
+unsigned long target=0;
 
 bool up;
 bool down;
@@ -335,7 +335,8 @@ bool right;
 void randomFood(){
   food[0]=random(0,3);
   food[1]=random(0,3);
-  food[2]=random(0,3);
+  food[2]=0;
+  // food[2]=random(0,3);
 }
 
 void setup() {
@@ -353,11 +354,15 @@ void setup() {
   snakeCor[0]=0;
   snakeCor[1]=0;
   snakeCor[2]=0;
-  // Serial.begin(9600);
+  Serial.begin(9600);
   pinMode(A0,INPUT);
+  digitalWrite(A0,HIGH);
   pinMode(A1,INPUT);
+  digitalWrite(A1,HIGH);
   pinMode(A2,INPUT);
+  digitalWrite(A2,HIGH);
   pinMode(A3,INPUT);
+  digitalWrite(A3,HIGH);
 
 }
 
@@ -367,19 +372,19 @@ void setup() {
 // #define fx 3
 // #define fy 4
 // #define fz 5
-int target2;
+bool flag=true;
 //add priority to buttons?
 void loop() {
   // delay(snakeSpeed);
   resetCube();
-  bool flag=true;
+  // bool flag=true;
   if(flag){
     up=false;
     down=false;
-    left=!digitalRead(A0);
-    right=!digitalRead(A1);
-    flag=false;
-    int target2=millis()+1000;
+    left=digitalRead(A0);
+    right=digitalRead(A1);
+    if(up || down || left || right)
+      flag=false;
   
     int direction_cpy=snakeFace[0];
     if(up){
@@ -671,24 +676,25 @@ void loop() {
     left=false;
     right=false;
   }
-  if(millis()>target2){
-    flag=true;
-  }
+
+  // Serial.println(snakeFace[0]);
   //update snake head
   // for(int i=;i<snakeLen)
+  ///MAJOR INT OVERFLOW ON TARGET
   if(millis()>target){
+    flag=true;
     target=millis()+snakeSpeed;
     if(snakeLen){
-      for(int i=snakeLen+2;i>1;i--){
-        if(snakeLen==1){
+      for(int i=snakeLen+1;i>0;i--){
+        if(i==1){
           snakeBody[1][0]=snakeCor[0];
           snakeBody[1][1]=snakeCor[1];
           snakeBody[1][2]=snakeCor[2];
         }
         else{
-          snakeBody[snakeLen][0]=snakeBody[snakeLen-1][3];
-          snakeBody[snakeLen][1]=snakeBody[snakeLen-1][3];
-          snakeBody[snakeLen][2]=snakeBody[snakeLen-1][3];
+          snakeBody[i][0]=snakeBody[i-1][0];
+          snakeBody[i][1]=snakeBody[i-1][1];
+          snakeBody[i][2]=snakeBody[i-1][2];
         }
       }
     }
@@ -719,11 +725,13 @@ void loop() {
     else
       ledseq(blue,snakeBody[i][0],snakeBody[i][1],snakeBody[i][2]);
   }
+  ledseq(green,food[0],food[1],food[2]);
 
 
   if(snakeCor[0]<0 || snakeCor[1]<0 || snakeCor[2]<0 || snakeCor[0]>3 || snakeCor[1]>3 || snakeCor[2]>3)
     while(1){
       fillCube(red);
+      // Serial.println("fuck");
     }
   
   if(snakeCor[0]==food[0] && snakeCor[1]==food[1] && snakeCor[2]==food[2]){
@@ -733,9 +741,7 @@ void loop() {
       snakeBody[1][1]=snakeCor[1];
       snakeBody[1][2]=snakeCor[2];
     }
-    food[0]=4;
-    food[1]=4;
-    food[2]=4;
+    randomFood();
   }
 
 }
